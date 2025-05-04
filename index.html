@@ -43,7 +43,7 @@
     // 2. Submit feedback to n8n
     function submitFeedback() {
       const feedback = document.getElementById("feedbackInput").value;
-      fetch("https://ihebjeridi.app.n8n.cloud/webhook/feedback", {
+      fetch("https://ihebjeridi.app.n8n.cloud/webhook/generate-diet", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
