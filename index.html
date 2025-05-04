@@ -31,7 +31,7 @@
     const queryString = new URLSearchParams(userData).toString();
 
     // 1. Trigger n8n workflow and load diet
-    fetch("https://ihebjeridi.app.n8n.cloud/webhook-test/generate-diet?" + queryString)
+    fetch("https://ihebjeridi.app.n8n.cloud/webhook/generate-diet?" + queryString)
       .then(res => res.json())
       .then(data => {
         document.getElementById("dietDisplay").innerText = data.diet || "No diet found.";
