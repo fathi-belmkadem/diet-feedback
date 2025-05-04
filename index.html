@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Diet Plan Feedback</title>
+</head>
+<body>
+  <h1>Your Diet Plan</h1>
+  <div id="dietDisplay">Loading...</div>
+
+  <h2>What do you think?</h2>
+  <textarea id="feedbackInput" rows="4" cols="50" placeholder="Write your feedback here..."></textarea><br>
+  <button onclick="submitFeedback()">Submit Feedback</button>
+
+  <p id="statusMessage"></p>
+
+  <script>
+    // 1. Load diet plan from n8n
+    fetch("https://ihebjeridi.app.n8n.cloud/webhook/diet")
+      .then(res => res.json())
+      .then(data => {
+        document.getElementById("dietDisplay").innerText = data.diet || "No diet found.";
+      });
+
+    // 2. Submit feedback to n8n
+    function submitFeedback() {
+      const feedback = document.getElementById("feedbackInput").value;
+      fetch("https://ihebjeridi.app.n8n.cloud/webhook/feedback", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ feedbackText: feedback })
+      })
+      .then(res => res.json())
+      .then(data => {
+        document.getElementById("statusMessage").innerText = data.message || "Feedback submitted!";
+      })
+      .catch(() => {
+        document.getElementById("statusMessage").innerText = "Error submitting feedback.";
+      });
+    }
+  </script>
+</body>
+</html>
