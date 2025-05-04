@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -14,11 +15,29 @@
   <p id="statusMessage"></p>
 
   <script>
-    // 1. Load diet plan from n8n
-    fetch("https://ihebjeridi.app.n8n.cloud/webhook/diet")
+    // User data to be sent via GET to start the workflow
+    const userData = {
+      Name: "iheb",
+      Age: 25,
+      Weight: 65,
+      Height: 165,
+      activityLevel: "Low",
+      goalWeight: 75,
+      Gender: "Male",
+      submittedAt: "2025-05-04T12:26:56.310+01:00",
+      formMode: "test"
+    };
+
+    const queryString = new URLSearchParams(userData).toString();
+
+    // 1. Trigger n8n workflow and load diet
+    fetch("https://ihebjeridi.app.n8n.cloud/webhook/diet?" + queryString)
       .then(res => res.json())
       .then(data => {
         document.getElementById("dietDisplay").innerText = data.diet || "No diet found.";
+      })
+      .catch(() => {
+        document.getElementById("dietDisplay").innerText = "Failed to load diet plan.";
       });
 
     // 2. Submit feedback to n8n
@@ -27,7 +46,11 @@
       fetch("https://ihebjeridi.app.n8n.cloud/webhook/feedback", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ feedbackText: feedback })
+        body: JSON.stringify({
+          feedbackText: feedback,
+          userName: userData.Name,
+          formMode: userData.formMode
+        })
       })
       .then(res => res.json())
       .then(data => {
